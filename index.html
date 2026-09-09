@@ -61,7 +61,7 @@ img{display:block; max-width:100%;}
   margin-bottom:6px; text-shadow:0 1px 12px rgba(0,0,0,0.35);}
 .hero .sub{font-size:13.5px; color:rgba(255,255,255,0.72); margin-bottom:16px;}
 
-.ticker{margin-top:18px; display:grid; grid-template-columns:repeat(6,1fr);
+.ticker{margin-top:18px; display:grid; grid-template-columns:repeat(5,1fr);
   border:1px solid rgba(255,255,255,0.18); border-radius:12px; overflow:hidden; background:rgba(1,46,65,0.42);}
 .ticker .cell{padding:13px 14px; border-right:1px solid rgba(255,255,255,0.12); min-width:0;}
 .ticker .cell:last-child{border-right:none;}
@@ -176,7 +176,7 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
   /* ---------- Board ---------- */
   .board{
     display:grid;
-    grid-template-columns:repeat(5, minmax(220px,1fr));
+    grid-template-columns:repeat(4, minmax(240px,1fr));
     gap:16px;
     padding:6px 32px 8px; max-width:1440px; margin:0 auto;
     align-items:start;
@@ -421,7 +421,6 @@ const CATS = [
   {key:'interested', label:'Open — Interested', color:'#B8860B'},
   {key:'open', label:'Open', color:'#5B6B72'},
   {key:'no', label:'Not Interested', color:'#B3261E'},
-  {key:'sites', label:'Sytes CRE', color:'#1E6677'},
 ];
 
 function esc(s){
