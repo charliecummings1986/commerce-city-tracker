@@ -47,17 +47,11 @@ export default async function handler(req, res) {
   if (!SERVICE_KEY) {
     // Said plainly, because the page shows this text: a checklist that silently
     // does nothing is worse than one that says why.
+    // The key is set per PROJECT in Vercel, not per team or per repo -- one on
+    // a neighbouring project is invisible here, and this is what that looks
+    // like from the inside.
     return res.status(503).json({
       error: "This deployment has no SUPABASE_SERVICE_ROLE_KEY set, so the checklist cannot be saved.",
-      // TEMPORARY, remove once the key is in: which environment this is, and
-      // the NAMES -- never the values -- of the variables it can actually see.
-      // Every name here is already in this file in a public repo, so it gives
-      // away nothing; what it settles is whether the key was saved to the
-      // wrong environment or under a different name.
-      diagnostic: {
-        vercelEnv: process.env.VERCEL_ENV || null,
-        matchingNames: Object.keys(process.env).filter((k) => /SUPABASE|TRACKER/i.test(k)).sort(),
-      },
     });
   }
 
