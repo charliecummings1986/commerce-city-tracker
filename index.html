@@ -112,6 +112,11 @@ section{padding:40px 0;}
 .nsdel:hover{color:#B3261E;}
 .nsadd{display:flex; gap:8px; margin-top:12px; padding-top:12px;
   border-top:1px solid rgba(242,135,5,.18);}
+/* The script hides this until the checklist has actually loaded, and an author
+   `display` beats the `hidden` attribute -- so without this rule the add box
+   sits there on a page that cannot save anything, which is the one thing the
+   fallback was written to avoid. */
+.nsadd[hidden]{display:none;}
 .nsadd input{flex:1 1 auto; min-width:0; padding:8px 11px; border:1px solid rgba(242,135,5,.35);
   border-radius:8px; font-family:var(--font); font-size:13px; color:var(--ink); background:#fff;}
 .nsadd input:focus{outline:2px solid var(--teal); outline-offset:1px; border-color:transparent;}
@@ -149,10 +154,21 @@ body.locked{overflow:hidden;}
 
 .next-steps-section{padding:32px 0 0;}
 
+/* Next Steps and the call notes stand side by side.
+
+   The checklist is a column of one-line items and never needed the full width;
+   stacked, the two boxes pushed the board most of a screen further down. The
+   meeting the steps came out of belongs beside them anyway. The notes take the
+   wider share because an open meeting is paragraphs where a step is a phrase. */
+.ns-notes{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);
+  gap:20px; align-items:start;}
+/* Back to one under the other before either column gets too narrow to read --
+   a struck-through step wrapping to three lines defeats the point of it. */
+@media (max-width:1024px){ .ns-notes{grid-template-columns:minmax(0,1fr);} }
+
 /* Call notes. One <details> per meeting, newest first: the board is what is
    happening now, and what was said on a call three weeks ago should be findable
    without pushing the board down the page. */
-.notes-section{padding:20px 0 0;}
 .notes{border:1.5px solid var(--line); border-left:6px solid var(--teal-deep);
   border-radius:12px; padding:18px 24px 6px; background:#fff;}
 .notes .vh{font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
@@ -388,6 +404,7 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
 
 <section class="next-steps-section">
   <div class="board-wrap">
+   <div class="ns-notes">
     <div class="callout">
       <div class="vh">Next Steps</div>
       <!-- Rendered from the database. The markup below is the fallback the page
@@ -408,11 +425,7 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
       </form>
       <div class="nsnote" id="nsNote" role="status" aria-live="polite"></div>
     </div>
-  </div>
-</section>
 
-<section class="notes-section">
-  <div class="board-wrap">
     <div class="notes">
       <div class="vh">Call Notes</div>
       <!-- Closed by default: the board is what the page is for, and a month of
@@ -436,6 +449,7 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
         </ul>
       </details>
     </div>
+   </div>
   </div>
 </section>
 
