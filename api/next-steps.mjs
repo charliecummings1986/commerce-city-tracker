@@ -21,6 +21,7 @@ const ACCESS_CODE = (process.env.TRACKER_ACCESS_CODE || "ldcommerce").trim().toL
 const BOARD = "commerce-city";
 const TABLE = "tracker_next_steps";
 const MAX_BODY = 500;
+const MAX_OWNER = 60;
 const MAX_ITEMS = 60;
 
 function rest(path, init = {}) {
@@ -37,7 +38,7 @@ function rest(path, init = {}) {
 
 async function list() {
   const r = await rest(
-    `${TABLE}?board=eq.${BOARD}&select=id,body,done,sort_order&order=sort_order.asc,created_at.asc`,
+    `${TABLE}?board=eq.${BOARD}&select=id,body,done,owner,sort_order&order=sort_order.asc,created_at.asc`,
   );
   if (!r.ok) throw new Error(await r.text());
   return r.json();
@@ -92,14 +93,33 @@ export default async function handler(req, res) {
       if (current.length >= MAX_ITEMS) {
         return res.status(409).json({ error: `That is already ${MAX_ITEMS} items. Clear some first.` });
       }
+      // Whose step it is. Free text rather than a fixed pair, because the
+      // third answer on this deal is never "nobody" -- it is the GC, or
+      // Debbie, or the city.
+      const owner = String(payload.owner || "").trim().slice(0, MAX_OWNER) || null;
+
       const last = current[current.length - 1];
       const r = await rest(TABLE, {
         method: "POST",
         body: JSON.stringify({
           board: BOARD,
           body,
+          owner,
           sort_order: (last ? last.sort_order : 0) + 10,
         }),
+      });
+      if (!r.ok) throw new Error(await r.text());
+      return res.status(200).json({ items: await list() });
+    }
+
+    // Change whose step it is, or clear the owner, without retyping the item.
+    if (action === "assign") {
+      const id = String(payload.id || "");
+      if (!id) return res.status(400).json({ error: "Which item?" });
+      const owner = String(payload.owner || "").trim().slice(0, MAX_OWNER) || null;
+      const r = await rest(`${TABLE}?id=eq.${encodeURIComponent(id)}&board=eq.${BOARD}`, {
+        method: "PATCH",
+        body: JSON.stringify({ owner }),
       });
       if (!r.ok) throw new Error(await r.text());
       return res.status(200).json({ items: await list() });
