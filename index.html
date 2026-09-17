@@ -87,6 +87,41 @@ section{padding:40px 0;}
   color:var(--orange); margin-bottom:6px;}
 .callout p{font-size:13.5px; color:var(--ink); line-height:1.55;}
 .callout b{color:var(--navy);}
+
+/* Next Steps as a working checklist. Ticks and new items are shared -- they go
+   to the database through /api/next-steps, so what you check here is what Leor
+   sees, and the other way round. */
+.nslist{list-style:none; margin:10px 0 0;}
+.nsrow{display:flex; align-items:flex-start; gap:10px; padding:7px 0;
+  border-top:1px solid rgba(242,135,5,.18);}
+.nslist > .nsrow:first-child{border-top:0;}
+.nsbox{appearance:none; -webkit-appearance:none; flex:0 0 auto; margin-top:1px;
+  width:17px; height:17px; border:1.5px solid var(--orange); border-radius:5px;
+  background:#fff; cursor:pointer; position:relative;}
+.nsbox:checked{background:var(--orange);}
+.nsbox:checked::after{content:""; position:absolute; left:5px; top:1px;
+  width:4px; height:9px; border:solid #fff; border-width:0 2px 2px 0;
+  transform:rotate(45deg);}
+.nsbox:focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+.nsbox:disabled{opacity:.45; cursor:progress;}
+.nstext{flex:1 1 auto; font-size:13.5px; color:var(--ink); line-height:1.55; cursor:pointer;}
+.nsrow--done .nstext{color:var(--muted); text-decoration:line-through;}
+.nsdel{flex:0 0 auto; border:0; background:none; cursor:pointer; padding:0 2px;
+  font-size:15px; line-height:1.2; color:#C9B49A; opacity:0; transition:opacity .12s ease;}
+.nsrow:hover .nsdel, .nsdel:focus-visible{opacity:1;}
+.nsdel:hover{color:#B3261E;}
+.nsadd{display:flex; gap:8px; margin-top:12px; padding-top:12px;
+  border-top:1px solid rgba(242,135,5,.18);}
+.nsadd input{flex:1 1 auto; min-width:0; padding:8px 11px; border:1px solid rgba(242,135,5,.35);
+  border-radius:8px; font-family:var(--font); font-size:13px; color:var(--ink); background:#fff;}
+.nsadd input:focus{outline:2px solid var(--teal); outline-offset:1px; border-color:transparent;}
+.nsadd button{flex:0 0 auto; padding:8px 15px; border:0; border-radius:8px; cursor:pointer;
+  background:var(--orange); color:#fff; font-family:var(--font); font-size:13px; font-weight:700;}
+.nsadd button:hover{background:var(--copper);}
+.nsadd button:disabled{opacity:.5; cursor:default;}
+.nsnote{font-size:11.5px; color:var(--muted); margin-top:9px; min-height:15px;}
+.nsnote--err{color:#B3261E; font-weight:600;}
+@media (max-width:860px){ .nsdel{opacity:1;} }
 .gate{
   position:fixed; inset:0; z-index:9999;
   background:linear-gradient(135deg,#012E41 0%,#02465F 100%);
@@ -355,7 +390,23 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
   <div class="board-wrap">
     <div class="callout">
       <div class="vh">Next Steps</div>
-      <p><b>1)</b> Best and final offers from tenants on Valvoline. <b>2)</b> Updated offer from SDP Acquisitions. <b>3)</b> Murphy Oil &mdash; awaiting response from Commerce City planning. <b>4)</b> Awaiting scopes of work for Kid's Empire and Slick City Action Park. <b>5)</b> Awaiting prototype and scope of work from Black Rock Coffee. <b>6)</b> Update with the Eatons &mdash; internal monthly progress update to deliver to Theresa. <b>7)</b> Awaiting signed commission agreement, already sent to Leor.</p>
+      <!-- Rendered from the database. The markup below is the fallback the page
+           was shipped with: if the checklist cannot be reached, these still
+           read, rather than the section going blank. -->
+      <ul class="nslist" id="nsList" data-fallback="1">
+        <li class="nsrow"><span class="nstext">Best and final offers from tenants on Valvoline.</span></li>
+        <li class="nsrow"><span class="nstext">Updated offer from SDP Acquisitions.</span></li>
+        <li class="nsrow"><span class="nstext">Murphy Oil &mdash; awaiting response from Commerce City planning.</span></li>
+        <li class="nsrow"><span class="nstext">Awaiting scopes of work for Kid's Empire and Slick City Action Park.</span></li>
+        <li class="nsrow"><span class="nstext">Awaiting prototype and scope of work from Black Rock Coffee.</span></li>
+        <li class="nsrow"><span class="nstext">Update with the Eatons &mdash; internal monthly progress update to deliver to Theresa.</span></li>
+        <li class="nsrow"><span class="nstext">Awaiting signed commission agreement, already sent to Leor.</span></li>
+      </ul>
+      <form class="nsadd" id="nsAdd" hidden>
+        <input id="nsNew" type="text" maxlength="500" placeholder="Add a next step&hellip;" aria-label="Add a next step">
+        <button type="submit" id="nsBtn">Add</button>
+      </form>
+      <div class="nsnote" id="nsNote" role="status" aria-live="polite"></div>
     </div>
   </div>
 </section>
@@ -445,6 +496,144 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
     </div>
   </div>
 </footer>
+
+<script>
+/**
+ * The Next Steps checklist.
+ *
+ * Every read and write goes through /api/next-steps, which holds the service
+ * key -- the browser never sees a database credential. Ticks are optimistic and
+ * roll back if the save fails, because a checkbox that waits on a round trip
+ * before moving feels broken.
+ *
+ * If the endpoint is unreachable, the list shipped in the HTML stays on screen
+ * and the add box stays hidden: a checklist you cannot save should not pretend
+ * it saved.
+ */
+(function(){
+  var API = '/api/next-steps';
+  var CODE = 'ldcommerce';
+  var listEl = document.getElementById('nsList');
+  var formEl = document.getElementById('nsAdd');
+  var inputEl = document.getElementById('nsNew');
+  var btnEl = document.getElementById('nsBtn');
+  var noteEl = document.getElementById('nsNote');
+  if (!listEl || !formEl) return;
+
+  var items = [];
+
+  function say(msg, isErr){
+    noteEl.textContent = msg || '';
+    noteEl.className = 'nsnote' + (isErr ? ' nsnote--err' : '');
+  }
+
+  function render(){
+    listEl.removeAttribute('data-fallback');
+    listEl.textContent = '';
+    items.forEach(function(it){
+      var li = document.createElement('li');
+      li.className = 'nsrow' + (it.done ? ' nsrow--done' : '');
+
+      var box = document.createElement('input');
+      box.type = 'checkbox';
+      box.className = 'nsbox';
+      box.checked = !!it.done;
+      box.id = 'ns_' + it.id;
+      box.setAttribute('aria-label', it.body);
+      box.addEventListener('change', function(){ toggle(it, box); });
+
+      var label = document.createElement('label');
+      label.className = 'nstext';
+      label.htmlFor = box.id;
+      label.textContent = it.body;
+
+      var del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'nsdel';
+      del.textContent = '×';
+      del.title = 'Remove this item';
+      del.setAttribute('aria-label', 'Remove: ' + it.body);
+      del.addEventListener('click', function(){ remove(it); });
+
+      li.appendChild(box); li.appendChild(label); li.appendChild(del);
+      listEl.appendChild(li);
+    });
+  }
+
+  function post(payload){
+    return fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.assign({ code: CODE }, payload))
+    }).then(function(r){
+      return r.json().catch(function(){ return {}; }).then(function(j){
+        if (!r.ok) throw new Error(j.error || ('Save failed (' + r.status + ').'));
+        return j;
+      });
+    });
+  }
+
+  function toggle(it, box){
+    var wanted = box.checked;
+    it.done = wanted;                       // optimistic
+    box.closest('.nsrow').classList.toggle('nsrow--done', wanted);
+    box.disabled = true;
+    say('');
+    post({ action: 'toggle', id: it.id, done: wanted })
+      .then(function(j){ items = j.items; render(); })
+      .catch(function(e){
+        it.done = !wanted;                  // put it back
+        box.checked = !wanted;
+        box.disabled = false;
+        box.closest('.nsrow').classList.toggle('nsrow--done', !wanted);
+        say(e.message, true);
+      });
+  }
+
+  function remove(it){
+    if (!window.confirm('Remove this next step?\n\n' + it.body)) return;
+    say('');
+    post({ action: 'remove', id: it.id })
+      .then(function(j){ items = j.items; render(); })
+      .catch(function(e){ say(e.message, true); });
+  }
+
+  formEl.addEventListener('submit', function(e){
+    e.preventDefault();
+    var body = inputEl.value.trim();
+    if (!body) return;
+    btnEl.disabled = true;
+    say('');
+    post({ action: 'add', body: body })
+      .then(function(j){
+        items = j.items; render();
+        inputEl.value = '';
+      })
+      .catch(function(e){ say(e.message, true); })
+      .then(function(){ btnEl.disabled = false; inputEl.focus(); });
+  });
+
+  fetch(API)
+    .then(function(r){
+      return r.json().catch(function(){ return {}; }).then(function(j){
+        if (!r.ok) throw new Error(j.error || ('Could not load the checklist (' + r.status + ').'));
+        return j;
+      });
+    })
+    .then(function(j){
+      items = j.items || [];
+      render();
+      formEl.hidden = false;
+    })
+    .catch(function(){
+      // Leave the shipped list on screen and say nothing. Leor reads this page;
+      // a status line about a missing environment variable means nothing to him
+      // and looks broken. The absence of checkboxes is the signal to us that it
+      // is not wired up. A failure while someone is actually clicking is
+      // different, and those still speak up.
+    });
+})();
+</script>
 
 <script>
 (function(){
