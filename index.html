@@ -113,6 +113,38 @@ section{padding:40px 0;}
 body.locked{overflow:hidden;}
 
 .next-steps-section{padding:32px 0 0;}
+
+/* Call notes. One <details> per meeting, newest first: the board is what is
+   happening now, and what was said on a call three weeks ago should be findable
+   without pushing the board down the page. */
+.notes-section{padding:20px 0 0;}
+.notes{border:1.5px solid var(--line); border-left:6px solid var(--teal-deep);
+  border-radius:12px; padding:18px 24px 6px; background:#fff;}
+.notes .vh{font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--teal-deep); margin-bottom:4px;}
+.mtg{border-top:1px solid var(--line);}
+.notes .vh + .mtg{border-top:0;}
+/* The arrow and the hover colour are enough to say it is clickable; a box
+   around it competed with the Next Steps callout above. */
+.mtg > summary{list-style:none; cursor:pointer; margin:9px 0;
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 2px; font-size:11.5px; font-weight:800; color:var(--navy);
+  transition:color .15s ease;}
+.mtg > summary::-webkit-details-marker{display:none;}
+.mtg > summary::before{content:"▸"; color:var(--teal-deep); font-size:10px; width:8px;
+  transition:transform .15s ease; flex:0 0 auto;}
+.mtg[open] > summary::before{transform:rotate(90deg);}
+.mtg > summary:hover{color:var(--teal-deep);}
+.mtg > summary:focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+.mtg__count{font-size:10px; font-weight:700; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.06em;}
+.mtg__items{margin:0 0 14px; padding-left:22px;}
+.mtg__items li{font-size:13.5px; color:var(--ink); line-height:1.55; margin-bottom:7px;}
+.mtg__items li b{color:var(--navy);}
+/* A pill this small is a poor thumb target, so it gets a little taller on
+   a phone without getting any wider. */
+@media (max-width:860px){ .notes{padding:16px 18px 4px;}
+  .mtg > summary{padding:8px 2px;} }
 .board-wrap{max-width:1440px; margin:0 auto; padding:0 32px;}
 @media (max-width:860px){ .board-wrap{padding:0 20px;} }
 
@@ -324,6 +356,33 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
     <div class="callout">
       <div class="vh">Next Steps</div>
       <p><b>1)</b> Best and final offers from tenants on Valvoline. <b>2)</b> Updated offer from SDP Acquisitions. <b>3)</b> Murphy Oil &mdash; awaiting response from Commerce City planning. <b>4)</b> Awaiting scopes of work for Kid's Empire and Slick City Action Park. <b>5)</b> Awaiting prototype and scope of work from Black Rock Coffee. <b>6)</b> Update with the Eatons &mdash; internal monthly progress update to deliver to Theresa. <b>7)</b> Awaiting signed commission agreement, already sent to Leor.</p>
+    </div>
+  </div>
+</section>
+
+<section class="notes-section">
+  <div class="board-wrap">
+    <div class="notes">
+      <div class="vh">Call Notes</div>
+      <!-- Closed by default: the board is what the page is for, and a month of
+           meetings expanded would push it below the fold. Click the date to read
+           the call. -->
+      <details class="mtg">
+        <summary>Mtg 9/17<span class="mtg__count">· 11 items</span></summary>
+        <ul class="mtg__items">
+          <li><b>Valvoline.</b> Going back with a ground lease offer of $150. If one party takes it we proceed with them; if both do, we run another round. Every other operating agreement term, the 10% increases included, is agreed.</li>
+          <li><b>Oil user.</b> Their purchase offer stands at $1.8M. At a $150 ground lease rate the purchase price has to clear $1.8M to compete. Chasing the identity, or at least the use, of the end user behind it — they may prefer a ground lease with a preferred developer building it.</li>
+          <li><b>Slick City and Kid's Empire.</b> Rough order of magnitude on internal buildout came back at $150–160 per SF. Call going in with the GC to test what that number assumes and includes, and confirming with both tenants that turnkey is the right assumption before we commit to a figure. Kid's Empire is now targeting a 20,000 SF prototype, up from 16,000 SF.</li>
+          <li><b>Chipotle.</b> Re-pricing so we do not leave money on the table. A comparable Las Vegas buildout ran $120–130 per SF; the build-to-suits that traded near $86 were priced off very low cap rates.</li>
+          <li><b>Strategy.</b> Moving from defensive to aggressive. Rather than one user per category, we line up several and let them compete for the site — car wash, gas, coffee, Mexican, breakfast, financial, and kids' entertainment.</li>
+          <li><b>Coffee and breakfast.</b> Scooter's still in play. Adding HTO, the Texas tea and water brand, and Dunkin'. First Watch remains interesting but $60 rent does not work as a build-to-suit — it would have to be a shell delivery.</li>
+          <li><b>Gas and car wash.</b> Going out to Murphy, Maverik, Chevron, Shell and QuikTrip, and setting a meeting with Commerce City to walk through these users.</li>
+          <li><b>Financial.</b> Pursuing U.S. Bank, Charles Schwab, Bellco, KeyBank, MidFirst and PNC. Still on Chase, though their rep has given us nothing yet.</li>
+          <li><b>Chicken and burgers.</b> Raising Cane's and Birdcall still open, and we are going at Chick-fil-A through the Las Vegas broker who represents them. Shake Shack open, The Habit Burger Grill touring in October, and we are re-engaging Culver's and adding Jack in the Box and Wendy's.</li>
+          <li><b>Back section.</b> HPI, the Texas developer, wants 5–8 acres for 150–180 senior housing units. True Life Companies is interested in the same ground — a deal there would let us cut off the hardest piece of the site, reduce the drainage requirement, and put a shared development agreement in place. A self-storage developer is the other option.</li>
+          <li><b>Landowners.</b> Cleared up the contingency waiver with Debbie — the deal is active and earnest money has gone hard. Moving to a monthly call or written update for Debbie and Theresa so they are not guessing between milestones.</li>
+        </ul>
+      </details>
     </div>
   </div>
 </section>
