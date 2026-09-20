@@ -408,6 +408,7 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
     font-size:11px; color:var(--slate); line-height:1.45;
   }
   .card .office{font-size:10.5px; color:var(--slate-light); margin-top:2px;}
+  .card .contacted-on{font-size:10.5px; font-weight:600; color:var(--slate-light); margin-top:4px;}
   .card .drive-link{
     display:inline-flex; align-items:center; gap:5px; margin-top:7px;
     font-size:10.5px; font-weight:700; color:var(--teal-deep);
@@ -926,6 +927,12 @@ function initials(name){
   return (words[0][0] + words[1][0]).toUpperCase();
 }
 
+function fmtDate(iso){
+  var d = new Date(iso);
+  if(isNaN(d.getTime())) return 'date not recorded';
+  return d.toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' });
+}
+
 function cardHTML(r){
   const typeLabel = [r.type, r.subtype].filter(Boolean).join(' · ');
   let meta = '';
@@ -963,6 +970,13 @@ function cardHTML(r){
   const dealBadge = r.deal
     ? `<span class="deal-badge deal-${esc(r.deal.toLowerCase())}">${esc(r.deal)}</span>` : '';
 
+  // Set by followContacted below, off the leads board. A prospect ticked
+  // before the date was kept says so rather than showing a blank, which would
+  // read as never contacted -- the one thing this line exists to rule out.
+  const contacted = r.contacted
+    ? `<div class="contacted-on">Contacted ${r.contactedAt ? esc(fmtDate(r.contactedAt)) : 'date not recorded'}</div>`
+    : '';
+
   return `<div class="card" data-name="${esc((r.name+' '+(r.contact||'')+' '+(r.office||'')).toLowerCase())}" data-type="${esc(r.type||'')}">
     <div class="card-top">
       ${logoBlock}
@@ -976,6 +990,7 @@ function cardHTML(r){
     ${terms}
     ${r.criteria ? `<div class="office">${esc(r.criteria)}</div>` : ''}
     ${office}
+    ${contacted}
     ${drive}
   </div>`;
 }
@@ -1073,11 +1088,21 @@ render('', '', '');
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(d){
       if(!d || !Array.isArray(d.contacted) || !d.contacted.length) return;
-      var done = new Set(d.contacted);
+      // Either a list of names or a list of {name, at}. Both are accepted so
+      // that this board and the leads board can be deployed in either order
+      // without a window where the cards stop moving.
+      var when = new Map();
+      d.contacted.forEach(function(entry){
+        if(typeof entry === 'string') when.set(entry, null);
+        else if(entry && entry.name) when.set(entry.name, entry.at || null);
+      });
       var moved = 0;
       DATA.forEach(function(r){
-        if(r.cat === 'notcontacted' && done.has((r.name || '').trim().toLowerCase())){
+        var key = (r.name || '').trim().toLowerCase();
+        if(r.cat === 'notcontacted' && when.has(key)){
           r.cat = 'open';
+          r.contacted = true;
+          r.contactedAt = when.get(key);
           moved++;
         }
       });
