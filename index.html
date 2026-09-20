@@ -1053,6 +1053,47 @@ buildStats();
 buildLegend();
 buildTypeFilter();
 render('', '', '');
+
+/**
+ * Follow the lead board's calling.
+ *
+ * Contacting a prospect happens on the Innovate CRE leads board, not here, so
+ * this board would otherwise keep showing someone under "Open — Not Contacted"
+ * long after they were called. It asks which retailers have been reached and
+ * moves their cards into "Open" -- the counts, the legend and the columns all
+ * read off `cat`, so setting it and re-rendering is the whole change.
+ *
+ * Best effort on purpose: this board is the record of who the prospects ARE,
+ * and it has to keep working when the leads board is down, slow, or simply not
+ * reachable from wherever it is being read. Any failure leaves it exactly as
+ * it was built.
+ */
+(function followContacted(){
+  fetch('https://www.innovate-cre.com/api/tracker-contacted', { cache: 'no-store' })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if(!d || !Array.isArray(d.contacted) || !d.contacted.length) return;
+      var done = new Set(d.contacted);
+      var moved = 0;
+      DATA.forEach(function(r){
+        if(r.cat === 'notcontacted' && done.has((r.name || '').trim().toLowerCase())){
+          r.cat = 'open';
+          moved++;
+        }
+      });
+      if(!moved) return;
+      // Not buildTypeFilter: the categories have not changed, and calling it
+      // again would bind a second change handler to the same select.
+      buildStats();
+      buildLegend();
+      render(
+        document.getElementById('searchBox').value,
+        document.getElementById('typeFilter').value,
+        document.getElementById('coFilter').value
+      );
+    })
+    .catch(function(){ /* leave the board as built */ });
+})();
 </script>
 
 </body>
