@@ -99,7 +99,7 @@ section{padding:40px 0;}
 .section-title .note{display:block; font-size:12.5px; font-weight:600; color:var(--muted); margin-top:4px;}
 
 .callout{border:1.5px solid var(--orange); border-left:6px solid var(--orange);
-  border-radius:12px; padding:12px 16px; background:#FFF7EE;}
+  border-radius:12px; padding:12px 16px; background:#fff;}
 .callout .vh{font-family:var(--label); font-size:12.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
   color:var(--orange); margin-bottom:2px;}
 .callout p{font-size:13.5px; color:var(--ink); line-height:1.55;}
@@ -510,13 +510,8 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
            was shipped with: if the checklist cannot be reached, these still
            read, rather than the section going blank. -->
       <ul class="nslist" id="nsList" data-fallback="1">
-        <li class="nsrow"><span class="nstext">Best and final offers from tenants on Valvoline.</span></li>
-        <li class="nsrow"><span class="nstext">Updated offer from SDP Acquisitions.</span></li>
-        <li class="nsrow"><span class="nstext">Murphy Oil &mdash; awaiting response from Commerce City planning.</span></li>
-        <li class="nsrow"><span class="nstext">Awaiting scopes of work for Kid's Empire and Slick City Action Park.</span></li>
-        <li class="nsrow"><span class="nstext">Awaiting prototype and scope of work from Black Rock Coffee.</span></li>
-        <li class="nsrow"><span class="nstext">Update with the Eatons &mdash; internal monthly progress update to deliver to Theresa.</span></li>
-        <li class="nsrow"><span class="nstext">Awaiting signed commission agreement, already sent to Leor.</span></li>
+        <li class="nsrow"><span class="nstext">Email Theresa and Debbie a progress update.</span></li>
+        <li class="nsrow"><span class="nstext">Prepare the build-to-suit bid for Black Rock Coffee.</span></li>
       </ul>
       <form class="nsadd" id="nsAdd" hidden>
         <input id="nsNew" type="text" maxlength="500" placeholder="Add a next step&hellip;" aria-label="Add a next step">
@@ -665,7 +660,8 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
   function render(){
     listEl.removeAttribute('data-fallback');
     listEl.textContent = '';
-    items.forEach(function(it){
+    // A ticked step drops off the list; it stays in the database as done.
+    items.filter(function(it){ return !it.done; }).forEach(function(it){
       var li = document.createElement('li');
       li.className = 'nsrow' + (it.done ? ' nsrow--done' : '');
 
