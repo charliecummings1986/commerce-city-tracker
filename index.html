@@ -9,8 +9,6 @@
 <title>Commerce City — Tenant Interest Tracker | Innovate Commercial Real Estate</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=PT+Sans+Narrow:wght@700&display=swap" rel="stylesheet">
-<link href="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.js"></script>
 <style>
 :root{
   --navy:#012E41; --navy-2:#1E6677; --teal:#0EB2CC; --orange:#F28705;
@@ -55,18 +53,13 @@ img{display:block; max-width:100%;}
 .breadcrumb .sep{margin:0 6px; color:var(--line);}
 
 .hero{
-  position:relative; overflow:hidden; background-color:#012E41;
+  background-color:#012E41;
+  /* Mapbox satellite of the site, pin three quarters across; api/hero-map.mjs
+     redirects to it so the token stays out of the repo. */
+  background-image: linear-gradient(135deg, rgba(1,46,65,0.72) 0%, rgba(1,15,20,0.62) 100%), url("/api/hero-map");
+  background-size: cover; background-position: 75% center; background-repeat: no-repeat;
   color:#fff; padding:22px 0 26px;
 }
-/* The map is scenery: no pan, zoom or touch handling, so a thumb on the hero
-   scrolls the page instead of the map. */
-.hero-map{position:absolute; inset:0; z-index:0; pointer-events:none;}
-.hero-map .mapboxgl-ctrl-logo, .hero-map .mapboxgl-ctrl-attrib{pointer-events:auto;}
-.hero::after{content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
-  background:linear-gradient(135deg, rgba(1,46,65,0.72) 0%, rgba(1,15,20,0.62) 100%);}
-.hero > .wrap{position:relative; z-index:2;}
-.hero-pin{width:18px; height:18px; border-radius:50%; background:#0EB2CC; border:3px solid #fff;
-  box-shadow:0 0 0 6px rgba(14,178,204,0.35);}
 .status-pill{display:inline-flex; align-items:center; gap:7px; font-family:var(--label); font-size:12px; font-weight:800;
   letter-spacing:.08em; text-transform:uppercase; background:rgba(14,178,204,0.16);
   border:1px solid rgba(14,178,204,0.5); color:#BDF6F9; padding:6px 13px; border-radius:999px; margin-bottom:12px;}
@@ -492,7 +485,6 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
 </div>
 
 <div class="hero">
-  <div class="hero-map" id="heroMap" aria-hidden="true"></div>
   <div class="wrap">
     <span class="status-pill"><span class="dot"></span>Active Listing</span>
     <h1>Commerce City — Tenant Interest Tracker</h1>
@@ -1117,25 +1109,6 @@ fetch('https://innovate-cre.com/api/tracker/contacted')
            document.getElementById('coFilter').value);
   })
   .catch(() => {});
-</script>
-
-<script>
-(function(){
-  var el = document.getElementById('heroMap');
-  if(!el || !window.mapboxgl) return;   // the navy background stands in
-  // The token comes from Vercel's environment; see api/map-token.mjs.
-  fetch('/api/map-token').then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
-    if(!d || !d.token) return;
-    mapboxgl.accessToken = d.token;
-    var site = [-104.8150, 39.8859];   // E 104th Ave & Chambers Rd
-    var map = new mapboxgl.Map({container:el, style:'mapbox://styles/mapbox/satellite-streets-v12',
-      center:site, zoom:15.2, interactive:false, attributionControl:true});
-    // On a wide screen the copy sits left, so the site is drawn right of center.
-    if(el.clientWidth > 860) map.setPadding({left:Math.round(el.clientWidth*0.45), top:0, right:0, bottom:0});
-    var pin = document.createElement('div'); pin.className = 'hero-pin';
-    new mapboxgl.Marker({element:pin}).setLngLat(site).addTo(map);
-  }).catch(function(){});
-})();
 </script>
 </body>
 </html>
