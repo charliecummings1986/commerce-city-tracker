@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="icon" href="https://innovate-cre.com/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="https://innovate-cre.com/icon.png">
+<link rel="apple-touch-icon" href="https://innovate-cre.com/apple-icon.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Commerce City — Tenant Interest Tracker | Innovate Commercial Real Estate</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=PT+Sans+Narrow:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#012E41; --navy-2:#02465F; --teal:#0EB2CC; --orange:#F28705;
+  --navy:#012E41; --navy-2:#1E6677; --teal:#0EB2CC; --orange:#F28705;
   --copper:#CE5D00; --blueprint:#1E6677; --ledger:#BDF6F9;
   --ink:#1c2b32; --muted:#5B6B72; --line:#D9E2E4; --bg:#F6FAFB;
-  --font: 'Plus Jakarta Sans', -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --label:'PT Sans Narrow', 'Arial Narrow', sans-serif;
+--boardroom:#010F14; --parchment:#F7CA9A;
+--font: 'Plus Jakarta Sans', -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
   --slate:#5B6B72;
   --slate-light:#8A9BA2;
@@ -49,14 +54,14 @@ img{display:block; max-width:100%;}
 
 .hero{
   background-color:#012E41;
-  background-image: linear-gradient(135deg, rgba(1,46,65,0.74) 0%, rgba(2,70,95,0.66) 100%), url("aerial.jpg");
+  background-image: linear-gradient(135deg, rgba(1,46,65,0.74) 0%, rgba(1,15,20,0.70) 100%), url("aerial.jpg");
   background-size: cover; background-position: center 45%; background-repeat: no-repeat;
   color:#fff; padding:22px 0 26px;
 }
-.status-pill{display:inline-flex; align-items:center; gap:7px; font-size:11px; font-weight:800;
+.status-pill{display:inline-flex; align-items:center; gap:7px; font-family:var(--label); font-size:12px; font-weight:800;
   letter-spacing:.08em; text-transform:uppercase; background:rgba(14,178,204,0.16);
-  border:1px solid rgba(14,178,204,0.5); color:#7FE6F2; padding:6px 13px; border-radius:999px; margin-bottom:12px;}
-.status-pill .dot{width:6px; height:6px; border-radius:50%; background:#3EEAFF; box-shadow:0 0 0 3px rgba(62,234,255,0.25);}
+  border:1px solid rgba(14,178,204,0.5); color:#BDF6F9; padding:6px 13px; border-radius:999px; margin-bottom:12px;}
+.status-pill .dot{width:6px; height:6px; border-radius:50%; background:#0EB2CC; box-shadow:0 0 0 3px rgba(14,178,204,0.25);}
 .hero h1{font-size:clamp(26px,3.6vw,36px); font-weight:800; letter-spacing:-0.01em; line-height:1.05;
   margin-bottom:6px; text-shadow:0 1px 12px rgba(0,0,0,0.35);}
 .hero .sub{font-size:13.5px; color:rgba(255,255,255,0.72); margin-bottom:16px;}
@@ -69,31 +74,31 @@ img{display:block; max-width:100%;}
   color:#fff; background:rgba(255,255,255,0.08); backdrop-filter:blur(2px);
   transition:background .15s ease, border-color .15s ease;}
 .hero-cta:hover{background:var(--orange); border-color:var(--orange);}
-.hero-cta:focus-visible{outline:2px solid #3EEAFF; outline-offset:3px;}
+.hero-cta:focus-visible{outline:2px solid #0EB2CC; outline-offset:3px;}
 
 .ticker{margin-top:18px; display:grid; grid-template-columns:repeat(3,1fr);
   border:1px solid rgba(255,255,255,0.18); border-radius:12px; overflow:hidden; background:rgba(1,46,65,0.42);}
 .ticker .cell{padding:13px 14px; border-right:1px solid rgba(255,255,255,0.12); min-width:0;}
 .ticker .cell:last-child{border-right:none;}
 .ticker .num{font-size:clamp(19px,2.1vw,24px); font-weight:800; color:#fff; display:block; font-variant-numeric:tabular-nums;}
-.ticker .lbl{font-size:9.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+.ticker .lbl{font-family:var(--label); font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
   color:rgba(255,255,255,0.62); margin-top:5px; display:block;}
 .ticker .cell.mo-cell{display:flex; flex-direction:column;}
-.mo-label{font-size:9.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+.mo-label{font-family:var(--label); font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
   color:rgba(255,255,255,0.62); margin-bottom:8px; display:block;}
 .mo-badges{display:flex; flex-direction:column; gap:5px;}
 .mo-badge{font-size:10.5px; font-weight:700; color:#fff; background:rgba(255,255,255,0.12);
   border:1px solid rgba(255,255,255,0.22); padding:3px 9px; border-radius:999px; width:fit-content;}
 
 section{padding:40px 0;}
-.section-eyebrow{font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+.section-eyebrow{font-family:var(--label); font-size:13px; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
   color:var(--teal); margin-bottom:8px;}
 .section-title{font-size:24px; font-weight:800; color:var(--navy); margin-bottom:20px;}
 .section-title .note{display:block; font-size:12.5px; font-weight:600; color:var(--muted); margin-top:4px;}
 
 .callout{border:1.5px solid var(--orange); border-left:6px solid var(--orange);
   border-radius:12px; padding:12px 16px; background:#FFF7EE;}
-.callout .vh{font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+.callout .vh{font-family:var(--label); font-size:12.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
   color:var(--orange); margin-bottom:2px;}
 .callout p{font-size:13.5px; color:var(--ink); line-height:1.55;}
 .callout b{color:var(--navy);}
@@ -187,7 +192,7 @@ section{padding:40px 0;}
 @media (max-width:860px){ .nsdel{opacity:1;} }
 .gate{
   position:fixed; inset:0; z-index:9999;
-  background:linear-gradient(135deg,#012E41 0%,#02465F 100%);
+  background:linear-gradient(135deg,#012E41 0%,#010F14 100%);
   display:flex; align-items:center; justify-content:center; padding:24px;
 }
 .gate-card{
@@ -229,7 +234,7 @@ body.locked{overflow:hidden;}
    without pushing the board down the page. */
 .notes{border:1.5px solid var(--line); border-left:6px solid var(--teal-deep);
   border-radius:12px; padding:18px 24px 6px; background:#fff;}
-.notes .vh{font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+.notes .vh{font-family:var(--label); font-size:12.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
   color:var(--teal-deep); margin-bottom:4px;}
 /* Every meeting sits on one line beside the heading, because the calls are
    short and a row per meeting turned into a ladder. The one that is open drops
@@ -277,12 +282,12 @@ body.locked{overflow:hidden;}
 footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
   padding:44px 0 calc(24px + env(safe-area-inset-bottom));}
 .foot-top{display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:28px; padding-bottom:32px;}
-.foot-brand-block .brand-logo{height:36px; filter:brightness(0) invert(1);}
+.foot-brand-block .brand-logo{height:36px;}
 .foot-brand-block p{font-size:12.5px; line-height:1.6; color:rgba(255,255,255,0.55); max-width:280px; margin-top:16px;}
 .foot-social{display:flex; gap:10px; margin-top:18px;}
 .foot-social a{width:30px; height:30px; border-radius:6px; background:rgba(255,255,255,0.08);
   display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.7); font-size:13px;}
-.foot-col h4{font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+.foot-col h4{font-family:var(--label); font-size:12.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
   color:rgba(255,255,255,0.85); margin-bottom:14px;}
 .foot-col a{display:block; font-size:12.5px; color:rgba(255,255,255,0.55); margin-bottom:10px;}
 .foot-bottom{border-top:1px solid rgba(255,255,255,0.12); padding-top:20px; font-size:11px;
@@ -355,9 +360,9 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
   }
   .col.loi .col-head{background:#012E41; color:#fff;}
   .col.interested .col-head{background:#1E6677; color:#fff;}
-  .col.open .col-head{background:#0EB2CC; color:#fff;}
+  .col.open .col-head{background:#0EB2CC; color:#010F14;}
   .col.notcontacted .col-head{background:#5C7C8A; color:#fff;}
-  .col.no .col-head{background:#F28705; color:#fff;}
+  .col.no .col-head{background:#CE5D00; color:#fff;}
   .col.sites .col-head{background:var(--sites); color:#fff;}
 
   .col-body{
@@ -379,7 +384,7 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
   .col.loi .card{border-left:3px solid #012E41;}
   .col.interested .card{border-left:3px solid #1E6677;}
   .col.open .card{border-left:3px solid #0EB2CC;}
-  .col.no .card{border-left:3px solid #F28705;}
+  .col.no .card{border-left:3px solid #CE5D00;}
   .col.sites .card{border-left:3px solid var(--sites);}
 
   .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
@@ -424,8 +429,8 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
     padding:3px 7px; border-radius:5px; white-space:nowrap; color:#fff;
   }
   .deal-badge.deal-bts{background:#1E6677;}
-  .deal-badge.deal-gl{background:#0EB2CC;}
-  .deal-badge.deal-sale{background:#F28705;}
+  .deal-badge.deal-gl{background:#0EB2CC; color:#010F14;}
+  .deal-badge.deal-sale{background:#CE5D00;}
 
   .empty-col{color:var(--slate-light); font-size:12px; padding:14px 6px; text-align:center;}
 
@@ -579,7 +584,7 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
     <div class="foot-top">
       <div class="foot-brand-block">
         <a href="https://innovate-cre.com/" target="_blank" rel="noopener">
-          <img class="brand-logo" src="https://innovate-cre.com/assets/brand/logo-nav.png" alt="Innovate Commercial Real Estate">
+          <img class="brand-logo" src="https://innovate-cre.com/assets/brand/logo-white.png" alt="Innovate Commercial Real Estate">
         </a>
         <p>At Innovate Commercial Real Estate, we believe commercial real estate should be your strategic advantage. We broke away from the one-size-fits-all model to deliver a smarter, more intentional approach for Colorado business owners, investors, and developers.</p>
         <div class="foot-social">
@@ -931,7 +936,7 @@ const CATS = [
   {key:'interested', label:'Open — Interested', color:'#1E6677'},
   {key:'notcontacted', label:'Open — Not Contacted', color:'#5C7C8A'},
   {key:'open', label:'Open', color:'#0EB2CC'},
-  {key:'no', label:'Not Interested', color:'#F28705'},
+  {key:'no', label:'Not Interested', color:'#CE5D00'},
 ];
 
 function esc(s){
@@ -1041,7 +1046,7 @@ function buildStats(){
   const t = document.getElementById('heroTicker');
   let html = CATS.map(cat => {
     const n = DATA.filter(r=>r.cat===cat.key).length;
-    const hl = ` style="color:${cat.key==='no' ? '#F9B65C' : (cat.key==='open' ? '#7FE6F2' : '#BDF6F9')}"`;
+    const hl = ` style="color:${cat.key==='no' ? '#F7CA9A' : (cat.key==='open' ? '#0EB2CC' : '#BDF6F9')}"`;
     return `<div class="cell"><span class="num"${hl}>${n}</span><span class="lbl">${cat.label}</span></div>`;
   }).join('');
   html += `<div class="cell"><span class="num">${DATA.length}</span><span class="lbl">Total Tracked</span></div>`;
