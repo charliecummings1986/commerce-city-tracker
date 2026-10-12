@@ -42,9 +42,9 @@ a{color:inherit; text-decoration:none;}
 img{display:block; max-width:100%;}
 
 .sitenav{border-bottom:1px solid var(--line); background:#fff; position:sticky; top:0; z-index:50;}
-.sitenav-inner{display:flex; align-items:center; justify-content:space-between; padding:14px 0;}
+.sitenav-inner{display:flex; align-items:center; justify-content:space-between; padding:10px 0;}
 .sitenav .logo-group{display:flex; align-items:center; gap:10px;}
-.brand-logo{height:40px; width:auto;}
+.brand-logo{width:160px; height:auto;}
 .sitenav nav{display:flex; align-items:center; gap:26px;}
 .sitenav nav a{font-size:13px; font-weight:600; color:var(--muted);}
 .sitenav nav a.current{color:var(--navy); font-weight:800;}
@@ -199,7 +199,7 @@ section{padding:40px 0;}
   background:#fff; border-radius:14px; padding:34px 32px; width:100%; max-width:380px;
   box-shadow:0 24px 60px rgba(0,0,0,.35); text-align:center;
 }
-.gate-card img{height:38px; margin:0 auto 20px;}
+.gate-card img{width:160px; height:auto; margin:0 auto 20px;}
 .gate-card h2{font-size:17px; font-weight:800; color:var(--navy); margin-bottom:6px;}
 .gate-card p{font-size:12.5px; color:var(--muted); margin-bottom:20px; line-height:1.5;}
 .gate-card input{
@@ -282,7 +282,7 @@ body.locked{overflow:hidden;}
 footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
   padding:44px 0 calc(24px + env(safe-area-inset-bottom));}
 .foot-top{display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:28px; padding-bottom:32px;}
-.foot-brand-block .brand-logo{height:36px;}
+.foot-brand-block .brand-logo{width:170px;}
 .foot-brand-block p{font-size:12.5px; line-height:1.6; color:rgba(255,255,255,0.55); max-width:280px; margin-top:16px;}
 .foot-social{display:flex; gap:10px; margin-top:18px;}
 .foot-social a{width:30px; height:30px; border-radius:6px; background:rgba(255,255,255,0.08);
@@ -295,7 +295,6 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
 
 @media (max-width: 860px){
   .sitenav nav{display:none;}
-  .brand-logo{height:34px;}
   .ticker{grid-template-columns:repeat(2,1fr);}
   .ticker .cell{border-bottom:1px solid rgba(255,255,255,0.12);}
   .ticker .cell:nth-child(odd){border-right:1px solid rgba(255,255,255,0.12);}
@@ -313,7 +312,7 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
     display:flex; gap:12px; align-items:center; flex-wrap:wrap;
     padding:16px 32px; max-width:1440px; margin:0 auto;
     background:#fff; border-bottom:1px solid var(--line);
-    position:sticky; top:69px; z-index:20;
+    position:sticky; top:75px; z-index:20;
   }
   .search-wrap{position:relative; flex:1 1 240px; max-width:340px;}
   .search-wrap input{
