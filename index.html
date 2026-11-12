@@ -459,6 +459,13 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
   .card a{color:var(--teal-deep); text-decoration:none; overflow-wrap:anywhere;}
   .card{min-width:0; overflow-wrap:anywhere;}
   .card a:hover{text-decoration:underline;}
+  /* Moving cards between columns: drag on desktop, the Move menu anywhere. */
+  .card[draggable="true"]{cursor:grab;}
+  .card.dragging{opacity:.45;}
+  .col.drop-target .col-body{outline:2px dashed var(--teal-deep); outline-offset:-2px;}
+  .card .move{margin-top:8px; display:flex; justify-content:flex-end;}
+  .card .move select{font:inherit; font-size:11px; color:var(--slate); background:#F4F8F9; border:1px solid var(--line); border-radius:6px; padding:2px 4px; max-width:100%; cursor:pointer;}
+  @media (hover:hover){ .card .move{opacity:0; transition:opacity .12s;} .card:hover .move, .card .move:focus-within{opacity:1;} }
   .card .action{
     margin-top:7px; padding-top:7px; border-top:1px dashed var(--line);
     font-size:11px; color:var(--slate); line-height:1.45;
@@ -1074,7 +1081,7 @@ function cardHTML(r){
   const dealBadge = r.deal
     ? `<span class="deal-badge deal-${esc(r.deal.toLowerCase())}">${esc(r.deal)}</span>` : '';
 
-  return `<div class="card" data-name="${esc((r.name+' '+(r.contact||'')+' '+(r.office||'')).toLowerCase())}" data-type="${esc(r.type||'')}">
+  return `<div class="card" draggable="true" data-card="${esc(r.name)}" data-name="${esc((r.name+' '+(r.contact||'')+' '+(r.office||'')).toLowerCase())}" data-type="${esc(r.type||'')}">
     <div class="card-top">
       ${logoBlock}
       <div class="card-title">
@@ -1090,6 +1097,7 @@ function cardHTML(r){
     ${r.comp ? `<div class="comp"><b>Competes with</b> ${esc(r.comp)}</div>` : ''}
     ${brokersOf(r).length ? brokersOf(r).map(b => `<div class="broker-line"><b>Broker</b> ${esc(b.firm)}${b.who ? ` · ${esc(b.who)}` : ''}${b.likely ? ' (likely)' : ''}</div>`).join('') : office}
     ${drive}
+    <div class="move"><select aria-label="Move ${esc(r.name)} to another column">${CATS.map(c => `<option value="${c.key}"${c.key === r.cat ? ' selected' : ''}>${c.key === r.cat ? 'Move to…' : esc(c.label)}</option>`).join('')}</select></div>
   </div>`;
 }
 
@@ -1131,14 +1139,15 @@ function render(filterText, filterType, filterCo){
     totalShown += items.length;
 
     const col = document.createElement('div');
-    col.className = 'col ' + cat.key + (items.length > 6 ? ' collapsed' : '');
+    col.className = 'col ' + cat.key + (items.length > 6 && !EXPANDED.has(cat.key) ? ' collapsed' : '');
+    col.dataset.cat = cat.key;
     const body = items.length
       ? items.map(cardHTML).join('')
       : `<div class="empty-col">No matches</div>`;
     col.innerHTML = `<div class="col-head">${cat.label}<span class="count">${items.length}</span></div>
       <div class="col-body">${body}${items.length > 6 ? `<button type="button" class="more-btn">Show all ${items.length}</button>` : ''}</div>`;
     const more = col.querySelector('.more-btn');
-    if(more) more.addEventListener('click', () => col.classList.remove('collapsed'));
+    if(more) more.addEventListener('click', () => { col.classList.remove('collapsed'); EXPANDED.add(cat.key); });
     board.appendChild(col);
   });
 
@@ -1191,6 +1200,56 @@ document.getElementById('coFilter').addEventListener('change', (e) => {
   render(document.getElementById('searchBox').value, document.getElementById('typeFilter').value, e.target.value);
 });
 
+// ---------- Moving cards between columns ----------
+// A move is saved through /api/card-moves (same database as Next Steps) with
+// the column the card had in this page. It applies only while the page still
+// has the card there, so a later edit to the page itself wins.
+const EXPANDED = new Set();
+const ORIG = new Map(DATA.map(r => [r.name, r.cat]));
+const MOVES_API = '/api/card-moves';
+const MOVES_CODE = 'ldcommerce';
+function rerender(){
+  buildStats();
+  render(document.getElementById('searchBox').value, document.getElementById('typeFilter').value, document.getElementById('coFilter').value);
+  if (window.renderPadMap) window.renderPadMap();
+}
+function moveCard(name, to){
+  const r = DATA.find(x => x.name === name);
+  if (!r || r.cat === to) return;
+  const before = r.cat;
+  r.cat = to; rerender();
+  fetch(MOVES_API, { method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ code: MOVES_CODE, name, from: ORIG.get(name) || before, to }) })
+    .then(res => { if (!res.ok) throw new Error(); })
+    .catch(() => { r.cat = before; rerender(); alert('That move could not be saved, so the card went back. Please try again.'); });
+}
+const boardEl = document.getElementById('board');
+let dragName = null;
+boardEl.addEventListener('dragstart', e => {
+  const card = e.target.closest && e.target.closest('.card'); if (!card) return;
+  dragName = card.dataset.card; card.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', dragName); } catch(_){}
+});
+boardEl.addEventListener('dragend', e => {
+  const card = e.target.closest && e.target.closest('.card'); if (card) card.classList.remove('dragging');
+  boardEl.querySelectorAll('.drop-target').forEach(c => c.classList.remove('drop-target')); dragName = null;
+});
+boardEl.addEventListener('dragover', e => {
+  const col = e.target.closest('.col'); if (!col || !dragName) return;
+  e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+  boardEl.querySelectorAll('.drop-target').forEach(c => { if (c !== col) c.classList.remove('drop-target'); });
+  col.classList.add('drop-target');
+});
+boardEl.addEventListener('drop', e => {
+  const col = e.target.closest('.col'); if (!col || !dragName) return;
+  e.preventDefault(); col.classList.remove('drop-target');
+  moveCard(dragName, col.dataset.cat);
+});
+boardEl.addEventListener('change', e => {
+  if (!e.target.matches('.move select')) return;
+  const card = e.target.closest('.card'); moveCard(card.dataset.card, e.target.value);
+});
+
 buildStats();
 buildLegend();
 buildTypeFilter();
@@ -1202,6 +1261,18 @@ render('', '', '');
 // Contacted there moves its card to Open here, without editing this page.
 // The website answers which ones: the portal key cannot sit in a public page.
 // If it cannot be reached the board simply stays as written.
+fetch(MOVES_API)
+  .then(r => r.ok ? r.json() : { moves: [] })
+  .then(j => {
+    let n = 0;
+    (j.moves || []).forEach(m => {
+      const r = DATA.find(x => x.name === m.card_name);
+      if (r && ORIG.get(r.name) === m.from_cat && r.cat !== m.to_cat) { r.cat = m.to_cat; n++; }
+    });
+    if (n) rerender();
+  })
+  .catch(() => {});
+
 fetch('https://innovate-cre.com/api/tracker/contacted')
   .then(r => r.ok ? r.json() : { contacted: [] })
   .then(j => {
