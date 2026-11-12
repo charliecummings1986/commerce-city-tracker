@@ -6,7 +6,7 @@
 <link rel="apple-touch-icon" href="https://innovate-cre.com/apple-icon.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Commerce City — Tenant Interest Tracker | Innovate Commercial Real Estate</title>
+<title>Commerce City Tenant Tracker | Innovate Commercial Real Estate</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=PT+Sans+Narrow:wght@700&display=swap" rel="stylesheet">
 <style>
@@ -86,6 +86,21 @@ img{display:block; max-width:100%;}
 .ticker .lbl{font-family:var(--label); font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
   color:rgba(255,255,255,0.62); margin-top:5px; display:block;}
 .ticker .cell.mo-cell{display:flex; flex-direction:column;}
+a.status-pill{text-decoration:none; transition:background .15s, border-color .15s;}
+a.status-pill:hover{background:rgba(14,178,204,0.22); border-color:#0EB2CC;}
+a.status-pill:focus-visible{outline:2px solid #0EB2CC; outline-offset:3px;}
+/* Hero: the LOIs are the headline; one quiet line carries the rest. */
+.loi-wrap{margin-top:18px;}
+.loi-head{font-family:var(--label); font-size:11.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#F59A2A; margin-bottom:8px;}
+.loi-chips{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px;}
+.loi-chip{display:flex; gap:11px; align-items:center; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); border-radius:11px; padding:11px 13px; min-width:0;}
+.loi-chip img, .loi-chip .mono{width:34px; height:34px; flex:0 0 34px; border-radius:8px; background:#fff; padding:4px; object-fit:contain;}
+.loi-chip .mono{display:grid; place-items:center; color:#011E2A; font-weight:800; font-size:12px; padding:0;}
+.loi-chip b{display:block; color:#fff; font-size:15px; font-weight:800; line-height:1.2;}
+.loi-chip span{display:block; color:#9FD3DE; font-size:12.5px; margin-top:2px;}
+.loi-line{margin-top:12px; font-size:14px; color:#BFD6DC; font-variant-numeric:tabular-nums;}
+.loi-line b{color:#F59A2A; font-weight:800;}
+.loi-line .sep{opacity:.5; margin:0 7px;}
 .mo-label{font-family:var(--label); font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
   color:rgba(255,255,255,0.62); margin-bottom:8px; display:block;}
 .mo-badges{display:flex; flex-direction:column; gap:5px;}
@@ -542,7 +557,7 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
 <div class="gate" id="gate">
   <div class="gate-card">
     <img src="https://innovate-cre.com/assets/brand/logo-nav.png" alt="Innovate Commercial Real Estate">
-    <h2>Commerce City — Tenant Interest Tracker</h2>
+    <h2>Commerce City Tenant Tracker</h2>
     <p>This report is confidential. Enter the access code provided by your broker.</p>
     <input id="gatePw" type="password" placeholder="Access code" autocomplete="off">
     <button id="gateBtn">View Report</button>
@@ -569,13 +584,13 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
 </div>
 
 <div class="wrap">
-  <div class="breadcrumb"><a href="https://innovate-cre.com/properties">Properties</a><span class="sep">/</span>Commerce City — Tenant Interest Tracker</div>
+  <div class="breadcrumb"><a href="https://innovate-cre.com/properties">Properties</a><span class="sep">/</span>Commerce City Tenant Tracker</div>
 </div>
 
 <div class="hero">
   <div class="wrap">
-    <span class="status-pill"><span class="dot"></span>Active Listing</span>
-    <h1>Commerce City — Tenant Interest Tracker</h1>
+    <a class="status-pill" href="https://innovate-cre.com/listings/14855-e-104th" target="_blank" rel="noopener" title="Open the property listing"><span class="dot"></span>Active Listing</a>
+    <h1>Commerce City Tenant Tracker</h1>
     <p class="sub">Commerce City, CO</p>
     <!-- The marketing page for the site itself. This board is the pipeline
          behind the listing; anyone reading it will want to see what is being
@@ -1223,13 +1238,22 @@ function render(filterText, filterType, filterCo){
 
 function buildStats(){
   const t = document.getElementById('heroTicker');
-  let html = CATS.map(cat => {
-    const n = DATA.filter(r=>r.cat===cat.key).length;
-    const hl = ` style="color:${cat.key==='no' ? '#F7CA9A' : (cat.key==='open' ? '#0EB2CC' : '#BDF6F9')}"`;
-    return `<div class="cell"><span class="num"${hl}>${n}</span><span class="lbl">${cat.label}</span></div>`;
+  t.className = 'loi-wrap';
+  // Short deal line per LOI; anything else falls back to its deal badge.
+  const DEAL = {"Chipotle":"Build to suit · Pad D", "Valvoline":"Ground lease $127K/yr · Pad G", "Take 5":"Ground lease · Pad G", "SDP Acquisitions":"Pad sale $2.0M · Pad D"};
+  const LOGO = {"Take 5":"take5.com", "SDP Acquisitions":null};
+  const lois = DATA.filter(r => r.cat === 'loi');
+  const chips = lois.map(r => {
+    const d = DEAL[r.name] || [r.deal === 'BTS' ? 'Build to suit' : r.deal === 'GL' ? 'Ground lease' : r.deal, r.pad ? 'Pad ' + r.pad : ''].filter(Boolean).join(' · ');
+    const dom = (r.name in LOGO) ? LOGO[r.name] : r.domain;
+    const ini = r.name.replace(/[^A-Za-z0-9 ]/g,'').split(/\s+/).slice(0,2).map(w => w[0]).join('').toUpperCase();
+    const icon = dom ? `<img src="https://www.google.com/s2/favicons?sz=64&domain=${encodeURIComponent(dom)}" alt="" onerror="this.outerHTML='<div class=&quot;mono&quot;>${ini}</div>'">` : `<div class="mono">${ini}</div>`;
+    return `<div class="loi-chip">${icon}<div style="min-width:0"><b>${esc(r.name)}</b><span>${esc(d)}</span></div></div>`;
   }).join('');
-  html += `<div class="cell"><span class="num">${DATA.length}</span><span class="lbl">Total Tracked</span></div>`;
-  t.innerHTML = html;
+  const n = k => DATA.filter(r => r.cat === k).length;
+  const contacted = DATA.length - n('notcontacted');
+  t.innerHTML = `<div class="loi-head">LOIs in hand</div><div class="loi-chips">${chips}</div>
+    <div class="loi-line"><b>${lois.length} LOIs</b><span class="sep">·</span>${n('interested')} interested<span class="sep">·</span>${n('reviewing')} reviewing<span class="sep">·</span>${Math.floor(contacted / 10) * 10}+ brands contacted</div>`;
 }
 
 function buildLegend(){
