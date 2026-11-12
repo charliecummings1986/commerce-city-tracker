@@ -302,29 +302,24 @@ body.locked{overflow:hidden;}
 .board-wrap{max-width:1440px; margin:0 auto; padding:0 32px;}
 /* Site plan pad map. Colors: orange LOI, teal interested, dashed prospects that fit. */
 .pm-section{padding:26px 0 8px;}
-/* Building around the site: numbered pins on a satellite frame, list grouped by use. */
+/* Building around the site: live Mapbox satellite map with numbered pins, list grouped by use. */
 .pj-section{padding:26px 0 8px;}
 .pj-grid{display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:18px; align-items:start;}
 @media (max-width:1000px){ .pj-grid{grid-template-columns:1fr;} }
-.pj-map{position:relative; border-radius:12px; overflow:hidden; border:1px solid var(--line); background:#0d1a1f; min-width:0;}
-.pj-map{touch-action:none; cursor:grab;} .pj-map.dragging{cursor:grabbing;}
-.pj-stage{position:relative; transform-origin:0 0; will-change:transform;}
-.pj-stage img{display:block; width:100%; height:auto; user-select:none; -webkit-user-drag:none;}
-.pj-stage svg{position:absolute; inset:0; width:100%; height:100%;}
-.pj-zoom{position:absolute; top:10px; right:10px; display:flex; flex-direction:column; gap:6px; z-index:2;}
-.pj-zoom button{min-width:36px; height:36px; border:0; border-radius:8px; background:#fff; color:var(--navy); font:800 18px var(--font); box-shadow:0 2px 8px rgba(1,30,42,.3); cursor:pointer; padding:0 8px;}
-.pj-zoom button#pjReset{font-size:11.5px; letter-spacing:.04em;}
-.pj-zoom button:focus-visible{outline:3px solid var(--teal-deep); outline-offset:2px;}
+.pj-map{position:relative; border-radius:12px; overflow:hidden; border:1px solid var(--line); background:#0d1a1f; min-width:0; height:620px;}
+@media (max-width:700px){ .pj-map{height:460px;} }
+.pj-gl, .pj-gl.mapboxgl-map{position:absolute !important; inset:0; width:100%; height:100%;}
+.pj-reset{position:absolute; top:10px; left:10px; z-index:2; border:0; border-radius:8px; background:#fff; color:var(--navy); font:800 12px var(--font); letter-spacing:.04em; padding:8px 11px; box-shadow:0 2px 8px rgba(1,30,42,.3); cursor:pointer;}
+.pj-reset:focus-visible{outline:3px solid var(--teal-deep); outline-offset:2px;}
+.pj-mk{width:28px; height:28px; border-radius:50%; border:2.5px solid #fff; color:#fff; font:800 12.5px var(--font); display:grid; place-items:center; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.pj-mk.nw{box-shadow:0 0 0 3px #FFD34D, 0 1px 4px rgba(0,0,0,.4);}
+.pj-mk.on{border-color:#011E2A; transform:scale(1.18);}
+.pj-site{width:46px; height:46px; border-radius:50%; border:5px solid #E07A00; box-shadow:0 0 0 3px #fff; position:relative; pointer-events:none;}
+.pj-site span{position:absolute; right:52px; top:8px; white-space:nowrap; font:800 15px var(--font); color:#fff; text-shadow:0 0 4px #011E2A, 0 0 4px #011E2A;}
 .pj-new{display:inline-block; margin-left:6px; font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#B85F00; background:#FDE3C4; padding:1px 6px; border-radius:999px; vertical-align:1px;}
-.pj-pin .nw{fill:none; stroke:#FFD34D; stroke-width:3;}
-.pj-pin{cursor:pointer;} .pj-pin circle{stroke:#fff; stroke-width:2.5;} .pj-pin text{font:800 13px var(--font); fill:#fff; text-anchor:middle; pointer-events:none;}
-.pj-pin.on circle{stroke:#011E2A; stroke-width:4;}
-.pj-road{fill:none; stroke:#FFD34D; stroke-width:7; stroke-linecap:round; stroke-opacity:.9;}
-.pj-site circle{fill:none; stroke:#fff; stroke-width:7;} .pj-site circle + circle{stroke:#E07A00; stroke-width:4;}
-.pj-sitelbl{font:800 16px var(--font); fill:#fff; paint-order:stroke; stroke:#011E2A; stroke-width:5px;}
-.pj-tip{position:absolute; pointer-events:none; background:#fff; color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; line-height:1.45; box-shadow:0 6px 18px rgba(1,30,42,.25); max-width:280px;}
-.pj-tip b{display:block; color:var(--navy);}
-.pj-panel{background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; min-width:0; max-height:760px; overflow:auto;}
+.pj-pop .mapboxgl-popup-content{font:12.5px/1.45 var(--font); color:var(--ink); padding:9px 11px; max-width:280px; border-radius:8px;}
+.pj-pop b{display:block; color:var(--navy);}
+.pj-panel{background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; min-width:0; max-height:620px; overflow:auto;}
 .pj-panel h4{font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin:14px 0 4px; font-weight:700; display:flex; align-items:center; gap:7px;}
 .pj-panel h4:first-child{margin-top:0;}
 .pj-panel h4 i{width:11px; height:11px; border-radius:50%; display:inline-block;}
@@ -334,6 +329,8 @@ body.locked{overflow:hidden;}
 .pj-num{width:22px; height:22px; border-radius:50%; color:#fff; font-weight:800; font-size:11.5px; display:grid; place-items:center;}
 .pj-item .n{font-weight:700; font-size:13.5px;} .pj-item .d{color:var(--muted); font-size:12.5px; margin-top:1px;}
 .pj-note{font-size:11.5px; color:var(--muted); margin-top:8px;}
+.pj-fallback{position:absolute; inset:0; display:grid; place-items:center; color:#fff; font-size:13px; text-align:center; padding:20px;}
+
 
 
 
@@ -682,23 +679,15 @@ footer.sitefoot{background:var(--navy); color:rgba(255,255,255,0.7);
       <div>
         <div class="pm-vh">Around the Site</div>
         <h2 class="pm-title">What's being built nearby</h2>
-        <p class="pm-sub">New homes, apartments, retail, schools and road work in and around Reunion, from Commerce City planning cases and permits. Select a number to read about it, and zoom with the buttons, the mouse wheel or a pinch. Gold rings mark filings made since July.</p>
+        <p class="pm-sub">New homes, apartments, retail, schools and road work in and around Reunion, from Commerce City planning cases and permits. Select a number to read about it. Zoom with the + and minus buttons, a pinch, or Ctrl and scroll. Gold rings mark filings made since July.</p>
       </div>
       <div class="pm-legend" id="pjLegend"></div>
     </div>
     <div class="pj-grid">
       <div>
         <div class="pj-map" id="pjMap">
-          <div class="pj-stage" id="pjStage">
-            <img src="/reunion-projects.jpg" alt="Satellite view of Reunion and the area around E 104th Ave and Chambers Rd" loading="lazy" draggable="false">
-            <svg id="pjSvg" viewBox="0 0 1280 800" role="img" aria-label="Map of projects being built around the site"></svg>
-          </div>
-          <div class="pj-zoom" role="group" aria-label="Map zoom">
-            <button type="button" id="pjIn" aria-label="Zoom in">+</button>
-            <button type="button" id="pjOut" aria-label="Zoom out">&minus;</button>
-            <button type="button" id="pjReset" aria-label="Reset the map view">Reset</button>
-          </div>
-          <div class="pj-tip" id="pjTip" hidden></div>
+          <div class="pj-gl" id="pjGL" role="region" aria-label="Satellite map of projects being built around the site"></div>
+          <button type="button" class="pj-reset" id="pjReset">Reset view</button>
         </div>
         <div class="pj-note">Sources: Commerce City eTRAKiT planning cases (searched 11/12/26), monthly ward reports (February to July 2026), City Council recaps, School District 27J and the city's road project pages. Status is as of the latest report found. Pins are placed by address or intersection. Imagery © Mapbox © OpenStreetMap © Maxar.</div>
       </div>
@@ -1466,38 +1455,15 @@ fetch('https://innovate-cre.com/api/tracker/contacted')
 
 </script>
 <script>
-// What's being built nearby: numbered pins over the satellite frame. Charlie, 11/12/26.
+// What's being built nearby: live Mapbox satellite map with numbered pins. Charlie, 11/12/26.
 (function(){
-  const D = {"W":1280,"H":800,"site":[525.9,468],"groups":{"res":{"label":"New homes","color":"#2F9E5B"},"mf":{"label":"Apartments","color":"#7A5CC9"},"com":{"label":"Retail and commercial","color":"#E07A00"},"pub":{"label":"Schools and public","color":"#0B95AC"}},"items":[{"i":1,"g":"res","n":"Reunion Village 8","d":"About 344 active adult lots directly north and west of the site. Development agreement in negotiation, infrastructure permit in review.","ap":false,"nw":false,"xy":[460.6,385.8]},{"i":2,"g":"res","n":"Reunion Filings 39 and 40","d":"About 287 single family lots at 112th and Chambers. Council approved Filing 39 on 10/20/26; Filing 40 is approved and waiting to record.","ap":false,"nw":false,"xy":[520.4,322.1]},{"i":3,"g":"res","n":"Reunion Ridge Filing 4","d":"Residential plat by Buffalo Run Golf Course, approved 6/1/26.","ap":false,"nw":false,"xy":[632.4,290.9]},{"i":4,"g":"res","n":"Reunion Ridge Filing 1, Amendment 6","d":"33 lot replat at 13670 E 104th Ave.","ap":false,"nw":false,"xy":[347.6,502]},{"i":5,"g":"res","n":"Reunion Center Filing 1","d":"190 paired homes and 10 commercial lots along E 104th in east Reunion. Council asked the developer to deliver the commercial pads. Location approximate.","ap":true,"nw":false,"xy":[765,524.7]},{"i":6,"g":"res","n":"Third Creek","d":"About 1,150 acre mixed use annexation, 104th to 120th at Himalaya. Lennar is selling homes now.","ap":false,"nw":false,"xy":[1181.4,341.9]},{"i":7,"g":"res","n":"One Buckley and Buckley Crossing","d":"Plats including 150 lots near 120th and Buckley, in review.","ap":false,"nw":false,"xy":[716.1,116.6]},{"i":8,"g":"res","n":"Turnberry Filing 2","d":"Subdivision plat at 12202 E 104th Ave, in review.","ap":false,"nw":false,"xy":[157.3,499.2]},{"i":9,"g":"mf","n":"TTRes by Thompson Thrift","d":"Apartments on 12.7 acres at 10225 Chambers Rd.","ap":false,"nw":false,"xy":[533.5,536]},{"i":10,"g":"mf","n":"Fronterra Park by YardHomes (Hogan site)","d":"10230 Chambers Rd, the Hogan PUD site. Council continued the apartment rezoning to 9/21/26, and YardHomes filed a pre application for Fronterra Park rental homes on 10/14/26.","ap":false,"nw":true,"xy":[575.9,541.7]},{"i":11,"g":"mf","n":"Murray Farms Apartments","d":"14 acre apartment site in Reunion Ridge South, in review.","ap":false,"nw":false,"xy":[357.4,647.9]},{"i":12,"g":"mf","n":"LTD Commerce City","d":"342 apartments on 20.7 acres at 10796 Paris St, under construction.","ap":false,"nw":false,"xy":[97.6,438.3]},{"i":13,"g":"com","n":"Reunion Station","d":"Thompson Thrift center at the NE corner of 104th and Chambers. Open, with Lot 9A (8,400 SF of shops) and Pad 3B (3,500 SF) still available.","ap":false,"nw":false,"xy":[596.5,463.8]},{"i":14,"g":"com","n":"15360 E 103rd Pl","d":"4,000 SF commercial shell, permit issued June 2026. Tenant not named.","ap":false,"nw":false,"xy":[585.6,504.8]},{"i":15,"g":"com","n":"Commons at 104th","d":"KinderCare (12,000 SF) and Advance Auto Parts (6,912 SF) at 104th and Potomac.","ap":false,"nw":false,"xy":[365,506.3]},{"i":16,"g":"com","n":"QuikTrip","d":"Fuel and convenience at 12450 E 104th Ave, about 1.3 miles west. Permit pending revisions.","ap":false,"nw":false,"xy":[196.5,499.2]},{"i":17,"g":"com","n":"Adams Crossing","d":"21.6 acre annexation with commercial zoning at the NW corner of Chambers and 120th.","ap":false,"nw":false,"xy":[531.3,45.7]},{"i":18,"g":"com","n":"Third Round Social","d":"Restaurant and entertainment at the SW corner of 104th and Tower, opening in phases in 2026.","ap":false,"nw":false,"xy":[955.2,506.3]},{"i":19,"g":"com","n":"Settlers Crossing","d":"9880 Tower Rd at 96th. Tunnel car wash, dental office and restaurant in review. New since July: Taco Bell (filed 9/21/26) and Complete Care emergency care (pre application 10/21/26).","ap":false,"nw":true,"xy":[996.6,638]},{"i":20,"g":"com","n":"7 Brew Coffee","d":"Drive thru coffee at 12451 E 104th Ave. PUD permit filed 9/17/26, in review.","ap":false,"nw":true,"xy":[196.5,489.3]},{"i":21,"g":"com","n":"Quick Quack Car Wash","d":"Pre application at 15051 E 104th Ave, on the site's own block at 104th and Chambers, filed 1/29/26 and issued.","ap":false,"nw":false,"xy":[542.2,485]},{"i":22,"g":"com","n":"Grocer, Second Creek Village","d":"Grocery pre application at 15451 E 104th Ave, filed 7/2/26 and issued 7/17/26. Grocer not named.","ap":false,"nw":true,"xy":[580.2,472.3]},{"i":23,"g":"com","n":"Black Rock Coffee","d":"9505 Tower Rd at 96th. PUD permit filed 11/6/26.","ap":false,"nw":true,"xy":[960.7,725.8]},{"i":24,"g":"com","n":"Second Creek Farm Filing 3","d":"9525 Tower Rd. Final plat filed 10/28/26 and a minor automotive services pre application filed 10/14/26.","ap":false,"nw":true,"xy":[938.9,703.2]},{"i":25,"g":"com","n":"Maverik and Taco Bell, 120th and Buckley","d":"17151 E 120th Ave. Maverik fuel station PUD permit filed 8/17/26 and Taco Bell filed 9/24/26; both need resubmittals.","ap":false,"nw":true,"xy":[765,88.2]},{"i":26,"g":"res","n":"Reunion Filing 38","d":"Preliminary plat at 16350 E 112th Ave, filed 8/11/26, in review.","ap":false,"nw":true,"xy":[705.2,286.6]},{"i":27,"g":"com","n":"Outlaw Wings","d":"Sit down restaurant at 9435 Tower Rd, in review.","ap":false,"nw":false,"xy":[958.5,737.1]},{"i":28,"g":"pub","n":"North Range Police Substation","d":"4.6 acre site at 13701 E 104th Ave. Engineering variance approved 9/22/26 and administrative adjustment approved 10/7/26; final plat needs resubmittal.","ap":false,"nw":true,"xy":[363.9,490.7]},{"i":29,"g":"pub","n":"Rocky Vista High School","d":"School District 27J high school for up to 1,800 students, opening fall 2027.","ap":false,"nw":false,"xy":[795.4,694.7]}],"roads":[{"n":"E 96th Ave widening","d":"Chambers to Tower, finishing December 2026.","pts":[[558.5,698.9],[967.2,701.7]]},{"n":"E 120th Ave improvements","d":"Chambers to Buckley, finishing fall 2026.","pts":[[565,84],[769.4,84]]},{"n":"Chambers Rd widening","d":"105th to 116th, designed, construction not yet funded.","pts":[[560.6,470.8],[562.8,187.5]]}]};
-  const NS = "http://www.w3.org/2000/svg", svg = document.getElementById("pjSvg"), list = document.getElementById("pjList"), tip = document.getElementById("pjTip"), box = document.getElementById("pjMap");
-  if (!svg || !list) return;
-  const el = (t, a, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; };
+  const D = {"site":[-104.8143,39.888],"groups":{"res":{"label":"New homes","color":"#2F9E5B"},"mf":{"label":"Apartments","color":"#7A5CC9"},"com":{"label":"Retail and commercial","color":"#E07A00"},"pub":{"label":"Schools and public","color":"#0B95AC"}},"items":[{"i":1,"g":"res","n":"Reunion Village 8","d":"About 344 active adult lots directly north and west of the site. Development agreement in negotiation, infrastructure permit in review.","ap":false,"nw":false,"ll":[-104.8185,39.893]},{"i":2,"g":"res","n":"Reunion Filings 39 and 40","d":"About 287 single family lots at 112th and Chambers. Council approved Filing 39 on 10/20/26; Filing 40 is approved and waiting to record.","ap":false,"nw":false,"ll":[-104.813,39.8975]},{"i":3,"g":"res","n":"Reunion Ridge Filing 4","d":"Residential plat by Buffalo Run Golf Course, approved 6/1/26.","ap":false,"nw":false,"ll":[-104.8027,39.8997]},{"i":4,"g":"res","n":"Reunion Ridge Filing 1, Amendment 6","d":"33 lot replat at 13670 E 104th Ave.","ap":false,"nw":false,"ll":[-104.8289,39.8848]},{"i":5,"g":"res","n":"Reunion Center Filing 1","d":"190 paired homes and 10 commercial lots along E 104th in east Reunion. Council asked the developer to deliver the commercial pads. Location approximate.","ap":true,"nw":false,"ll":[-104.7905,39.8832]},{"i":6,"g":"res","n":"Third Creek","d":"About 1,150 acre mixed use annexation, 104th to 120th at Himalaya. Lennar is selling homes now.","ap":false,"nw":false,"ll":[-104.7522,39.8961]},{"i":7,"g":"res","n":"One Buckley and Buckley Crossing","d":"Plats including 150 lots near 120th and Buckley, in review.","ap":false,"nw":false,"ll":[-104.795,39.912]},{"i":8,"g":"res","n":"Turnberry Filing 2","d":"Subdivision plat at 12202 E 104th Ave, in review.","ap":false,"nw":false,"ll":[-104.8464,39.885]},{"i":9,"g":"mf","n":"TTRes by Thompson Thrift","d":"Apartments on 12.7 acres at 10225 Chambers Rd.","ap":false,"nw":false,"ll":[-104.8118,39.8824]},{"i":10,"g":"mf","n":"Fronterra Park by YardHomes (Hogan site)","d":"10230 Chambers Rd, the Hogan PUD site. Council continued the apartment rezoning to 9/21/26, and YardHomes filed a pre application for Fronterra Park rental homes on 10/14/26.","ap":false,"nw":true,"ll":[-104.8079,39.882]},{"i":11,"g":"mf","n":"Murray Farms Apartments","d":"14 acre apartment site in Reunion Ridge South, in review.","ap":false,"nw":false,"ll":[-104.828,39.8745]},{"i":12,"g":"mf","n":"LTD Commerce City","d":"342 apartments on 20.7 acres at 10796 Paris St, under construction.","ap":false,"nw":false,"ll":[-104.8519,39.8893]},{"i":13,"g":"com","n":"Reunion Station","d":"Thompson Thrift center at the NE corner of 104th and Chambers. Open, with Lot 9A (8,400 SF of shops) and Pad 3B (3,500 SF) still available.","ap":false,"nw":false,"ll":[-104.806,39.8875]},{"i":14,"g":"com","n":"15360 E 103rd Pl","d":"4,000 SF commercial shell, permit issued June 2026. Tenant not named.","ap":false,"nw":false,"ll":[-104.807,39.8846]},{"i":15,"g":"com","n":"Commons at 104th","d":"KinderCare (12,000 SF) and Advance Auto Parts (6,912 SF) at 104th and Potomac.","ap":false,"nw":false,"ll":[-104.8273,39.8845]},{"i":16,"g":"com","n":"QuikTrip","d":"Fuel and convenience at 12450 E 104th Ave, about 1.3 miles west. Permit pending revisions.","ap":false,"nw":false,"ll":[-104.8428,39.885]},{"i":17,"g":"com","n":"Adams Crossing","d":"21.6 acre annexation with commercial zoning at the NW corner of Chambers and 120th.","ap":false,"nw":false,"ll":[-104.812,39.917]},{"i":18,"g":"com","n":"Third Round Social","d":"Restaurant and entertainment at the SW corner of 104th and Tower, opening in phases in 2026.","ap":false,"nw":false,"ll":[-104.773,39.8845]},{"i":19,"g":"com","n":"Settlers Crossing","d":"9880 Tower Rd at 96th. Tunnel car wash, dental office and restaurant in review. New since July: Taco Bell (filed 9/21/26) and Complete Care emergency care (pre application 10/21/26).","ap":false,"nw":true,"ll":[-104.7692,39.8752]},{"i":20,"g":"com","n":"7 Brew Coffee","d":"Drive thru coffee at 12451 E 104th Ave. PUD permit filed 9/17/26, in review.","ap":false,"nw":true,"ll":[-104.8428,39.8857]},{"i":21,"g":"com","n":"Quick Quack Car Wash","d":"Pre application at 15051 E 104th Ave, next door to the site on the east, filed 1/29/26 and issued.","ap":false,"nw":false,"ll":[-104.8122,39.886]},{"i":22,"g":"com","n":"Grocer, Second Creek Village","d":"Grocery pre application at 15451 E 104th Ave, filed 7/2/26 and issued 7/17/26. Grocer not named.","ap":false,"nw":true,"ll":[-104.8075,39.8869]},{"i":23,"g":"com","n":"Black Rock Coffee","d":"9505 Tower Rd at 96th. PUD permit filed 11/6/26.","ap":false,"nw":true,"ll":[-104.7725,39.869]},{"i":24,"g":"com","n":"Second Creek Farm Filing 3","d":"9525 Tower Rd. Final plat filed 10/28/26 and a minor automotive services pre application filed 10/14/26.","ap":false,"nw":true,"ll":[-104.7745,39.8706]},{"i":25,"g":"com","n":"Maverik and Taco Bell, 120th and Buckley","d":"17151 E 120th Ave. Maverik fuel station PUD permit filed 8/17/26 and Taco Bell filed 9/24/26; both need resubmittals.","ap":false,"nw":true,"ll":[-104.7905,39.914]},{"i":26,"g":"res","n":"Reunion Filing 38","d":"Preliminary plat at 16350 E 112th Ave, filed 8/11/26, in review.","ap":false,"nw":true,"ll":[-104.796,39.9]},{"i":27,"g":"com","n":"Outlaw Wings","d":"Sit down restaurant at 9435 Tower Rd, in review.","ap":false,"nw":false,"ll":[-104.7727,39.8682]},{"i":28,"g":"pub","n":"North Range Police Substation","d":"4.6 acre site at 13701 E 104th Ave. Engineering variance approved 9/22/26 and administrative adjustment approved 10/7/26; final plat needs resubmittal.","ap":false,"nw":true,"ll":[-104.8274,39.8856]},{"i":29,"g":"pub","n":"Rocky Vista High School","d":"School District 27J high school for up to 1,800 students, opening fall 2027.","ap":false,"nw":false,"ll":[-104.7877,39.8712]}],"roads":[{"n":"E 96th Ave widening","d":"Chambers to Tower, finishing December 2026.","pts":[[-104.8095,39.8709],[-104.7719,39.8707]]},{"n":"E 120th Ave improvements","d":"Chambers to Buckley, finishing fall 2026.","pts":[[-104.8089,39.9143],[-104.7901,39.9143]]},{"n":"Chambers Rd widening","d":"105th to 116th, designed, construction not yet funded.","pts":[[-104.8093,39.887],[-104.8091,39.907]]}]};
+  const list = document.getElementById("pjList"), box = document.getElementById("pjGL");
+  if (!list || !box) return;
   const esc3 = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-  let sel = null;
-  D.roads.forEach(r => { const pl = el("polyline", { points: r.pts.map(p => p.join(",")).join(" "), class: "pj-road", "vector-effect": "non-scaling-stroke" }); pl.appendChild(document.createElementNS(NS, "title")).textContent = r.n + ": " + r.d; });
-  const s = el("g", { class: "pj-site" });
-  el("circle", { cx: D.site[0], cy: D.site[1], r: 22 }, s); el("circle", { cx: D.site[0], cy: D.site[1], r: 22 }, s);
-  el("text", { x: D.site[0] - 30, y: D.site[1] - 30, class: "pj-sitelbl", "text-anchor": "end" }, s).textContent = "The site";
-  const pins = {};
-  D.items.forEach(it => {
-    const g = el("g", { class: "pj-pin", tabindex: "0", role: "button", "aria-label": it.i + ". " + it.n });
-    if (it.nw) el("circle", { cx: it.xy[0], cy: it.xy[1], r: 19, class: "nw" }, g);
-    el("circle", { cx: it.xy[0], cy: it.xy[1], r: 14, fill: D.groups[it.g].color }, g);
-    el("text", { x: it.xy[0], y: it.xy[1] + 4.5 }, g).textContent = it.i;
-    g.dataset.x = it.xy[0]; g.dataset.y = it.xy[1];
-    const show = () => {
-      tip.innerHTML = "<b>" + it.i + ". " + esc3(it.n) + "</b>" + esc3(it.d);
-      tip.hidden = false;
-      const k = box.clientWidth / D.W * Z.s; let L = it.xy[0] * k + Z.x + 16, T = it.xy[1] * k + Z.y + 14;
-      if (L + 290 > box.clientWidth) L = it.xy[0] * k - 296;
-      if (T + 110 > box.clientHeight) T = Math.max(4, it.xy[1] * k - 120);
-      tip.style.left = Math.max(4, L) + "px"; tip.style.top = Math.max(4, T) + "px";
-    };
-    g.addEventListener("mouseenter", show); g.addEventListener("focus", show);
-    g.addEventListener("mouseleave", () => tip.hidden = true); g.addEventListener("blur", () => tip.hidden = true);
-    g.addEventListener("click", () => pick(it.i));
-    pins[it.i] = g;
-  });
+  let sel = null, map = null; const marks = {};
+
+  // The list and legend do not depend on the map loading.
   document.getElementById("pjLegend").innerHTML = Object.values(D.groups).map(g => '<span><i class="pm-sw" style="background:' + g.color + ';border-color:' + g.color + ';border-radius:50%;width:12px"></i>' + g.label + '</span>').join("") + '<span><i class="pm-sw" style="background:#FFD34D;border-color:#FFD34D;height:5px"></i>Road work</span><span><i class="pm-sw" style="background:transparent;border:3px solid #FFD34D;border-radius:50%;width:12px"></i>New since July</span>';
   let h = "";
   for (const k in D.groups) {
@@ -1507,55 +1473,63 @@ fetch('https://innovate-cre.com/api/tracker/contacted')
   }
   h += '<h4><i style="background:#FFD34D"></i>Road work</h4>' + D.roads.map(r => '<div class="pj-item" style="cursor:default"><span class="pj-num" style="background:#C9A200">R</span><div><div class="n">' + esc3(r.n) + '</div><div class="d">' + esc3(r.d) + '</div></div></div>').join("");
   list.innerHTML = h;
-  // Zoom and pan: buttons, mouse wheel, drag, and two finger pinch. Pins keep their size.
-  const stage = document.getElementById("pjStage");
-  const Z = { s: 1, x: 0, y: 0 }, MAXZ = 5;
-  function clampZ(){
-    const w = box.clientWidth, h = box.clientHeight;
-    Z.s = Math.min(MAXZ, Math.max(1, Z.s));
-    Z.x = Math.min(0, Math.max(w - w * Z.s, Z.x)); Z.y = Math.min(0, Math.max(h - h * Z.s, Z.y));
-  }
-  function applyZ(){
-    clampZ();
-    stage.style.transform = "translate(" + Z.x + "px," + Z.y + "px) scale(" + Z.s + ")";
-    Object.values(pins).forEach(g => { const x = +g.dataset.x, y = +g.dataset.y; g.setAttribute("transform", "translate(" + x + " " + y + ") scale(" + (Z.s > 1 ? 1.4 / Z.s : 1) + ") translate(" + (-x) + " " + (-y) + ")"); });
-    svg.querySelectorAll(".pj-site").forEach(g => g.setAttribute("transform", "translate(" + D.site[0] + " " + D.site[1] + ") scale(" + (1 / Z.s) + ") translate(" + (-D.site[0]) + " " + (-D.site[1]) + ")"));
-    tip.hidden = true;
-  }
-  function zoomAt(f, cx, cy){ const s0 = Z.s; Z.s = Math.min(MAXZ, Math.max(1, Z.s * f)); const r = Z.s / s0; Z.x = cx - (cx - Z.x) * r; Z.y = cy - (cy - Z.y) * r; applyZ(); }
-  const mid = () => [box.clientWidth / 2, box.clientHeight / 2];
-  document.getElementById("pjIn").addEventListener("click", e => { e.stopPropagation(); zoomAt(1.6, ...mid()); });
-  document.getElementById("pjOut").addEventListener("click", e => { e.stopPropagation(); zoomAt(1 / 1.6, ...mid()); });
-  document.getElementById("pjReset").addEventListener("click", e => { e.stopPropagation(); Z.s = 1; Z.x = 0; Z.y = 0; applyZ(); });
-  box.addEventListener("wheel", e => { if (!e.ctrlKey && Z.s === 1 && e.deltaY > 0) return; e.preventDefault(); const r = box.getBoundingClientRect(); zoomAt(e.deltaY < 0 ? 1.25 : 0.8, e.clientX - r.left, e.clientY - r.top); }, { passive: false });
-  const ptrs = new Map(); let drag = null, pinch = null;
-  box.addEventListener("pointerdown", e => {
-    if (e.target.closest(".pj-zoom")) return;
-    ptrs.set(e.pointerId, [e.clientX, e.clientY]);
-    if (ptrs.size === 1) drag = { x: e.clientX, y: e.clientY, zx: Z.x, zy: Z.y, moved: false };
-    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), s: Z.s }; drag = null; }
-  });
-  box.addEventListener("pointermove", e => {
-    if (!ptrs.has(e.pointerId)) return; ptrs.set(e.pointerId, [e.clientX, e.clientY]);
-    if (pinch && ptrs.size === 2) { const [a, b] = [...ptrs.values()], r = box.getBoundingClientRect(); const d = Math.hypot(a[0] - b[0], a[1] - b[1]); zoomAt((pinch.s * d / pinch.d) / Z.s, (a[0] + b[0]) / 2 - r.left, (a[1] + b[1]) / 2 - r.top); return; }
-    if (drag && Z.s > 1) { const dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 4) { drag.moved = true; box.classList.add("dragging"); } Z.x = drag.zx + dx; Z.y = drag.zy + dy; applyZ(); }
-  });
-  const endPtr = e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if (!ptrs.size) { if (drag && drag.moved) box.addEventListener("click", ev => ev.stopPropagation(), { capture: true, once: true }); drag = null; box.classList.remove("dragging"); } };
-  box.addEventListener("pointerup", endPtr); box.addEventListener("pointercancel", endPtr); box.addEventListener("pointerleave", endPtr);
-  window.addEventListener("resize", applyZ);
-  // From the list: zoom in on that pin so a cluster opens up.
-  function focusPin(i){ const it = D.items.find(x => x.i === i); if (!it) return; const k = box.clientWidth / D.W; Z.s = Math.max(Z.s, 2.5); Z.x = box.clientWidth / 2 - it.xy[0] * k * Z.s; Z.y = box.clientHeight / 2 - it.xy[1] * k * Z.s; applyZ(); }
-  function pick(i){
+
+  const all = D.items.map(it => it.ll).concat([D.site]);
+  const bounds = () => { const xs = all.map(p => p[0]), ys = all.map(p => p[1]); return [[Math.min(...xs), Math.min(...ys)], [Math.max(...xs), Math.max(...ys)]]; };
+  const pop = it => '<b>' + it.i + '. ' + esc3(it.n) + '</b>' + esc3(it.d);
+
+  function pick(i, fly){
     sel = sel === i ? null : i;
-    Object.entries(pins).forEach(([k, g]) => g.classList.toggle("on", +k === sel));
+    Object.entries(marks).forEach(([k, m]) => m.el.classList.toggle("on", +k === sel));
     list.querySelectorAll(".pj-item[data-i]").forEach(r => r.classList.toggle("on", +r.dataset.i === sel));
-    const row = list.querySelector('.pj-item[data-i="' + i + '"]'); if (sel && row) row.scrollIntoView({ block: "nearest" });
+    const row = list.querySelector('.pj-item[data-i="' + i + '"]'); if (sel && row && !fly) row.scrollIntoView({ block: "nearest" });
+    if (!map) return;
+    Object.values(marks).forEach(m => m.marker.getPopup().isOpen() && m.marker.togglePopup());
+    if (sel) { const m = marks[sel]; if (fly) map.flyTo({ center: m.it.ll, zoom: Math.max(map.getZoom(), 15.5), speed: 1.4 }); m.marker.togglePopup(); }
   }
   list.querySelectorAll(".pj-item[data-i]").forEach(r => {
-    const go = () => { pick(+r.dataset.i); if (sel) focusPin(sel); };
-    r.addEventListener("click", go);
-    r.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    r.addEventListener("click", () => pick(+r.dataset.i, true));
+    r.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(+r.dataset.i, true); } });
   });
+
+  let TOKEN = "";
+  function build(){
+    mapboxgl.accessToken = TOKEN;
+    map = new mapboxgl.Map({ container: box, style: "mapbox://styles/mapbox/satellite-streets-v12", bounds: bounds(), fitBoundsOptions: { padding: 50 }, cooperativeGestures: true, attributionControl: true, maxZoom: 19 });
+    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
+    map.on("load", () => {
+      map.addSource("pjRoads", { type: "geojson", data: { type: "FeatureCollection", features: D.roads.map(r => ({ type: "Feature", properties: { n: r.n }, geometry: { type: "LineString", coordinates: r.pts } })) } });
+      map.addLayer({ id: "pjRoads", type: "line", source: "pjRoads", layout: { "line-cap": "round" }, paint: { "line-color": "#FFD34D", "line-width": ["interpolate", ["linear"], ["zoom"], 12, 4, 17, 10], "line-opacity": 0.9 } });
+    });
+    const s = document.createElement("div"); s.className = "pj-site"; s.innerHTML = "<span>The site</span>";
+    new mapboxgl.Marker({ element: s }).setLngLat(D.site).addTo(map);
+    D.items.forEach(it => {
+      const el = document.createElement("div");
+      el.className = "pj-mk" + (it.nw ? " nw" : ""); el.style.background = D.groups[it.g].color; el.textContent = it.i;
+      el.tabIndex = 0; el.setAttribute("role", "button"); el.setAttribute("aria-label", it.i + ". " + it.n);
+      const popup = new mapboxgl.Popup({ offset: 18, closeButton: false, className: "pj-pop", maxWidth: "300px" }).setHTML(pop(it));
+      const marker = new mapboxgl.Marker({ element: el }).setLngLat(it.ll).setPopup(popup).addTo(map);
+      el.addEventListener("mouseenter", () => { if (!popup.isOpen()) marker.togglePopup(); });
+      el.addEventListener("mouseleave", () => { if (sel !== it.i && popup.isOpen()) marker.togglePopup(); });
+      el.addEventListener("click", e => { e.stopPropagation(); pick(it.i, false); });
+      el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(it.i, false); } });
+      marks[it.i] = { el, marker, it };
+    });
+    document.getElementById("pjReset").addEventListener("click", () => map.fitBounds(bounds(), { padding: 50 }));
+  }
+  // Load Mapbox GL only when the map is near the screen.
+  const fail = () => { box.innerHTML = '<div class="pj-fallback">The satellite map could not load. The list beside it has every project.</div>'; };
+  function load(){
+    fetch("/api/map-token").then(r => r.ok ? r.json() : {}).then(j => { TOKEN = j.token || ""; if (!TOKEN) return fail(); loadGL(); }).catch(fail);
+  }
+  function loadGL(){
+    if (window.mapboxgl) return build();
+    const l = document.createElement("link"); l.rel = "stylesheet"; l.href = "https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.css"; document.head.appendChild(l);
+    const sc = document.createElement("script"); sc.src = "https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.js"; sc.onload = build;
+    sc.onerror = fail;
+    document.head.appendChild(sc);
+  }
+  if ("IntersectionObserver" in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); load(); } }, { rootMargin: "400px" }); io.observe(box); } else load();
 })();
 </script>
 </body>
